@@ -116,34 +116,6 @@ Open your browser and navigate to:
 
 ---
 
-## ☁️ Deployment Instructions
-
-### Option A: Deploy on Render
-
-1. Create a `Procfile` in the project root directory (`EmotionAI/Procfile`):
-   ```text
-   web: gunicorn app:app
-   ```
-2. Push your project code to a **GitHub** repository.
-3. Go to [Render Dashboard](https://render.com) and click **New +** -> **Web Service**.
-4. Connect your GitHub repository.
-5. Set build settings:
-   - **Environment**: Python 3
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-6. Add Environment Variables:
-   - `SECRET_KEY`: `your_random_secret_string`
-   - `PYTHON_VERSION`: `3.10.12`
-7. Click **Deploy Web Service**.
-
-### Option B: Deploy on Railway
-
-1. Install Railway CLI or deploy via GitHub integration at [railway.app](https://railway.app).
-2. Create a **New Project** -> **Deploy from GitHub repo**.
-3. Railway automatically detects Python Flask app.
-4. Add environment variables (`SECRET_KEY`).
-5. Railway provides an automatic SSL custom domain URL.
-
 ---
 
 ## 🛡️ License
