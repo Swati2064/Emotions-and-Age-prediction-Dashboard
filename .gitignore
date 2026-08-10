@@ -1,0 +1,28 @@
+# Virtual Environment
+venv/
+.venv/
+
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# IDE
+.vscode/
+.idea/
+
+# Database
+*.db
+
+# Uploaded files
+static/uploads/*
+
+# TensorFlow / DeepFace cache
+.keras/
+.cache/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - EmotionAI Platform{% endblock %}
+
+{% block layout %}
+<!-- Sidebar -->
+<aside class="sidebar">
+    <a href="{{ url_for('dashboard') }}" class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+            <i class="fa-solid fa-brain"></i>
+        </div>
+        <span class="sidebar-brand-text">EmotionAI</span>
+    </a>
+
+    <ul class="sidebar-nav">
+        <li>
+            <a href="#upload-section" class="nav-link-custom active">
+                <i class="fa-solid fa-gauge-high"></i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="#upload-section" class="nav-link-custom">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload Image
+            </a>
+        </li>
+        <li>
+            <a href="#music-section" class="nav-link-custom">
+                <i class="fa-solid fa-compact-disc"></i> Recommended Songs
+            </a>
+        </li>
+        <li>
+            <a href="#history-section" class="nav-link-custom">
+                <i class="fa-solid fa-clock-rotate-left"></i> Detection History
+            </a>
+        </li>
+    </ul>
+
+    <div class="mt-auto pt-4 border-top border-white-10">
+        <div class="d-flex align-items-center gap-3 mb-3 px-2">
+            <div class="rounded-circle bg-primary-subtle text-primary p-2 text-center" style="width: 38px; height: 38px;">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="overflow-hidden">
+                <h6 class="mb-0 text-white text-truncate fw-bold">{{ user.username }}</h6>
+                <small class="text-muted text-truncate d-block" style="font-size: 0.75rem;">{{ user.email }}</small>
+            </div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger w-100 btn-sm py-2">
+            <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+        </a>
+    </div>
+</aside>
+
+<!-- Main Dashboard Area -->
+<main class="main-content">
+    
+    <!-- Top Bar -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold text-white mb-1">AI Emotion & Age Dashboard</h2>
+            <p class="text-muted mb-0">Upload a face photo to detect emotion, predict age, and get personalized songs.</p>
+        </div>
+        <div>
+            <span class="badge bg-success-subtle text-success border border-success px-3 py-2">
+                <i class="fa-solid fa-circle-dot me-1"></i> AI Neural Engine Active
+            </span>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="globalAlert" class="d-none"></div>
+
+    <!-- Grid Layout: Upload, Preview, Results -->
+    <section id="upload-section" class="row g-4 mb-4">
+        
+        <!-- CARD 1: Upload Image -->
+        <div class="col-lg-5">
+            <div class="glass-card h-100">
+                <div class="glass-card-header">
+                    <h5 class="mb-0 text-white"><i class="fa-solid fa-upload text-primary me-2"></i> Card 1: Upload Image</h5>
+                    <span class="badge bg-secondary-subtle text-muted">JPG / PNG</span>
+                </div>
+                <div class="glass-card-body">
+                    <form id="uploadForm">
+                        <div class="upload-dropzone mb-3" id="dropzone">
+                            <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                            <h6 class="fw-bold text-white mb-1">Drag & Drop Image Here</h6>
+                            <p class="text-muted small mb-2">or click to browse from device</p>
+                            <span class="badge bg-dark text-muted border border-secondary">Max file size: 16 MB</span>
+                            <input type="file" id="imageInput" accept="image/jpeg, image/png, image/jpg" class="d-none">
+                        </div>
+
+                        <div id="fileInfoText" class="small mb-3 text-truncate text-muted"></div>
+
+                        <button type="submit" id="btnRunAI" class="btn btn-glow-primary w-100 py-3 fw-bold" disabled>
+                            <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Run AI Analysis
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2 & CARD 3 Right Column -->
+        <div class="col-lg-7">
+            <div class="row g-4">
+                
+                <!-- CARD 2: Image Preview -->
+                <div class="col-md-6">
+                    <div class="glass-card h-100">
+                        <div class="glass-card-header">
+                            <h5 class="mb-0 text-white"><i class="fa-solid fa-image text-cyan me-2"></i> Card 2: Image Preview</h5>
+                        </div>
+                        <div class="glass-card-body">
+                            <div class="preview-container" id="previewContainer">
+                                
+                                <!-- Empty State -->
+                                <div id="emptyState" class="text-center p-4 text-muted">
+                                    <i class="fa-solid fa-image-portrait mb-3 text-secondary" style="font-size: 3rem;"></i>
+                                    <p class="small mb-0">Select an image to preview AI detection overlay</p>
+                                </div>
+
+                                <!-- Raw Upload Image -->
+                                <img id="rawPreviewImg" src="" alt="Selected Preview" class="preview-img d-none">
+
+                                <!-- Annotated AI Output Image -->
+                                <img id="annotatedResultImg" src="" alt="AI Output Bounding Box" class="preview-img d-none">
+
+                                <!-- Animated Scanner Loader -->
+                                <div id="scannerOverlay" class="scanner-overlay d-none">
+                                    <div class="scanner-laser"></div>
+                                    <div class="spinner-border text-info mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+                                    <h6 class="fw-bold text-white mb-1">Scanning Face Features...</h6>
+                                    <small class="text-info">Deep Neural Network Running</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: AI Analysis Result -->
+                <div class="col-md-6">
+                    <div class="glass-card h-100">
+                        <div class="glass-card-header">
+                            <h5 class="mb-0 text-white"><i class="fa-solid fa-chart-pie text-emerald me-2"></i> Card 3: AI Results</h5>
+                        </div>
+                        <div class="glass-card-body">
+                            
+                            <!-- Initial Empty Prompt -->
+                            <div id="resultsContainer" class="d-none">
+                                
+                                <!-- Metric 1: Face Detected -->
+                                <div class="mb-3 p-3 rounded" style="background: rgba(10,15,26,0.6); border: 1px solid var(--border-color);">
+                                    <small class="text-muted d-block mb-1">Face Detected</small>
+                                    <div id="resFaceDetected" class="fw-bold fs-6">
+                                        <span class="badge bg-success-subtle text-success">YES</span>
+                                    </div>
+                                </div>
+
+                                <!-- Metric 2: Age Prediction -->
+                                <div class="mb-3 p-3 rounded" style="background: rgba(10,15,26,0.6); border: 1px solid var(--border-color);">
+                                    <small class="text-muted d-block mb-1">Age Prediction</small>
+                                    <h4 id="resAge" class="fw-bold text-white mb-0">25 years</h4>
+                                </div>
+
+                                <!-- Metric 3: Emotion Detection -->
+                                <div class="mb-3 p-3 rounded" style="background: rgba(10,15,26,0.6); border: 1px solid var(--border-color);">
+                                    <small class="text-muted d-block mb-1">Emotion Detection</small>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div id="resEmotionPill" class="emotion-pill happy">
+                                            <i class="fa-solid fa-face-smile me-1"></i> Happy
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Metric 4: Confidence Score -->
+                                <div class="p-3 rounded" style="background: rgba(10,15,26,0.6); border: 1px solid var(--border-color);">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <span>AI Confidence Score</span>
+                                        <span id="resConfidenceVal" class="fw-bold text-info">98%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
+                                        <div id="resConfidenceBar" class="progress-bar bg-info progress-bar-striped progress-bar-animated" style="width: 98%;"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Placeholder when no result yet -->
+                            <div id="resultsPlaceholder" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-brain mb-3 text-secondary" style="font-size: 2.5rem;"></i>
+                                <p class="small mb-0">AI analysis metrics will appear here after uploading an image.</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- CARD 4: Recommended Music -->
+    <section id="music-section" class="mb-5">
+        <div class="glass-card">
+            <div class="glass-card-header">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-compact-disc text-primary fs-4"></i>
+                    <div>
+                        <h5 class="mb-0 text-white">Card 4: Recommended Music</h5>
+                        <small class="text-muted">Songs tailored to detected emotion with Spotify & YouTube quick links</small>
+                    </div>
+                </div>
+                <span id="musicEmotionBadge" class="badge bg-primary-subtle text-primary border border-primary px-3 py-2">
+                    Upload image to match mood
+                </span>
+            </div>
+            <div class="glass-card-body">
+                <div id="musicContainer" class="row g-3">
+                    <div class="col-12 text-center py-5 text-muted">
+                        <i class="fa-solid fa-headphones mb-3 text-secondary" style="font-size: 2.5rem;"></i>
+                        <p class="mb-0">Music recommendations will be automatically generated based on the detected emotion.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detection History Section -->
+    <section id="history-section" class="mb-5">
+        <div class="glass-card">
+            <div class="glass-card-header">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-cyan fs-4"></i>
+                    <div>
+                        <h5 class="mb-0 text-white">Detection History</h5>
+                        <small class="text-muted">Stored previous AI predictions and analysis logs</small>
+                    </div>
+                </div>
+                <button onclick="refreshHistoryTable()" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa-solid fa-rotate-right me-1"></i> Refresh Logs
+                </button>
+            </div>
+            <div class="glass-card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Preview</th>
+                                <th>Timestamp</th>
+                                <th>Detected Emotion</th>
+                                <th>Age Prediction</th>
+                                <th>Confidence</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Populated dynamically via JS -->
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    Loading history logs...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IN-APP STICKY MUSIC PLAYER WIDGET -->
+    <div id="inlineMusicPlayer" class="sticky-music-player glass-card d-none">
+        <div class="container-fluid py-3 px-3">
+            <div class="row align-items-center g-3">
+                
+                <!-- Track Details -->
+                <div class="col-lg-4 col-md-5 d-flex align-items-center gap-3">
+                    <div class="player-equalizer">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="overflow-hidden">
+                        <small class="text-info fw-bold text-uppercase d-block" style="font-size: 0.7rem; letter-spacing: 0.05em;">
+                            <i class="fa-solid fa-compact-disc fa-spin me-1"></i> Playing Recommended Song
+                        </small>
+                        <h6 id="playerTitle" class="mb-0 text-white text-truncate fw-bold">Song Title</h6>
+                        <small id="playerArtist" class="text-muted text-truncate d-block" style="font-size: 0.8rem;">Artist Name</small>
+                    </div>
+                </div>
+                
+                <!-- YouTube Video Stream Embed -->
+                <div class="col-lg-6 col-md-6">
+                    <div id="ytEmbedWrapper" class="ratio ratio-16x9 rounded overflow-hidden shadow" style="max-height: 140px;">
+                        <iframe id="playerFrame" src="" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="border:0;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Close Player -->
+                <div class="col-lg-2 col-md-1 text-end d-flex align-items-center justify-content-end">
+                    <button onclick="closeMusicPlayer()" class="btn btn-sm btn-outline-danger border-0 rounded-circle" title="Close Player">
+                        <i class="fa-solid fa-xmark fs-3"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Load history table automatically on dashboard page render
+    document.addEventListener('DOMContentLoaded', () => {
+        refreshHistoryTable();
+    });
+</script>
+{% endblock %}

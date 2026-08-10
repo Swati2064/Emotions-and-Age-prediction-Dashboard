@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}EmotionAI - Face, Emotion & Age AI Platform{% endblock %}
+
+{% block layout %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg border-bottom border-white-10 py-3">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+            <div class="sidebar-brand-icon" style="width:36px; height:36px; font-size:1rem;">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+            <span class="sidebar-brand-text fs-4">EmotionAI</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <i class="fa-solid fa-bars text-white fs-3"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto align-items-center gap-3 mt-3 mt-lg-0">
+                {% if session.get('user_id') %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-glow-primary">
+                            <i class="fa-solid fa-chart-line me-1"></i> Go to Dashboard
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('login') }}" class="nav-link text-white fw-semibold">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('signup') }}" class="btn btn-glow-primary">Get Started Free</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-2 rounded-pill mb-3">
+                    <i class="fa-solid fa-sparkles me-1"></i> AI Facial Intelligence Platform
+                </span>
+                <h1 class="gradient-title">Detect Emotions & Predict Age in Real-Time</h1>
+                <p class="lead text-muted mb-4 mx-auto" style="max-width: 720px;">
+                    Experience deep learning face analysis powered by OpenCV & DeepFace. Detect human facial features, estimate age, analyze emotions, and get instant mood-tailored Spotify & YouTube music playlists.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ url_for('signup') }}" class="btn btn-glow-primary btn-lg px-4 py-3">
+                        <i class="fa-solid fa-rocket me-2"></i> Launch AI Dashboard
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg px-4 py-3 rounded-3">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i> Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AI Features Grid -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Core AI Capabilities</h2>
+            <p class="text-muted">Production-level computer vision and neural facial recognition features.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 h-100">
+                    <div class="feature-icon-wrapper">
+                        <i class="fa-solid fa-expand"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Face Detection</h5>
+                    <p class="text-muted small">OpenCV Haar Cascade face scanner draws precise HUD bounding boxes with real-time face count metrics.</p>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 h-100">
+                    <div class="feature-icon-wrapper">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Age Prediction</h5>
+                    <p class="text-muted small">Estimates facial age based on structural geometry and skin texture complexity analysis.</p>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 h-100">
+                    <div class="feature-icon-wrapper">
+                        <i class="fa-solid fa-face-smile-beam"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Emotion Classifier</h5>
+                    <p class="text-muted small">Detects 7 distinct facial expressions: Happy, Sad, Angry, Neutral, Fear, Surprise, and Disgust with confidence percentages.</p>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 h-100">
+                    <div class="feature-icon-wrapper">
+                        <i class="fa-solid fa-music"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Music Matcher</h5>
+                    <p class="text-muted small">Recommends mood-boosting songs with direct quick-links to Spotify and YouTube based on your detected emotion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-top border-white-10 py-4 text-center text-muted mt-5">
+    <div class="container">
+        <p class="mb-0 small">&copy; 2026 EmotionAI Platform. Built with Python, Flask, OpenCV & DeepFace.</p>
+    </div>
+</footer>
+{% endblock %}
