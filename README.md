@@ -24,7 +24,7 @@ Python, Flask, OpenCV, DeepFace, Flask-SQLAlchemy, SQLite, NumPy, Pandas, Scikit
 
 1. Clone the repository:
 
-git clone https://github.com/YOUR-USERNAME/EmotionAI.git
+git clone https://github.com/Swati2064/EmotionAI.git
 
 2. Open the project:
 
