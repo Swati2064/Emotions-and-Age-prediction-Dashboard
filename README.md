@@ -14,47 +14,11 @@ An AI-powered web application that detects facial emotions and approximate age f
 - 🗄️ SQLite Database
 - 🌙 Modern Dashboard UI
 ---
-## 🎭 Supported Emotions
-
-😊 Happy | 😢 Sad | 😠 Angry | 😐 Neutral | 😨 Fear | 😲 Surprise | 🤢 Disgust
----
 ## 🛠️ Technologies Used
 
 Python, Flask, OpenCV, DeepFace, Flask-SQLAlchemy, SQLite, NumPy, Pandas, Scikit-learn, Pillow, HTML, CSS, JavaScript, Bootstrap 5
 --
-## 📁 Project Structure
 
-EmotionAI/
-│
-├── ai_models/
-│   ├── age_detection.py
-│   ├── emotion.py
-│   └── face_detector.py
-│
-├── music/
-│   └── recommendation.py
-│
-├── static/
-│   ├── audio/
-│   ├── css/
-│   ├── js/
-│   └── uploads/
-│
-├── templates/
-│   ├── base.html
-│   ├── dashboard.html
-│   ├── index.html
-│   ├── login.html
-│   └── signup.html
-│
-├── app.py
-├── config.py
-├── create_audio_samples.py
-├── database.py
-├── download_original_songs.py
-├── models.py
-├── requirements.txt
-└── README.md
 
 ## ⚙️ Installation
 
